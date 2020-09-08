@@ -5,7 +5,7 @@ from pprint import pprint
 from skimage.util import random_noise
 from scipy import signal
 import torch.distributions as tdist
-
+import math
 from PIL import Image
 
 import matplotlib.pyplot as plt
@@ -70,11 +70,11 @@ y = criterion(pred, gt_onehot_label)
 
 # noise = gaussian(0, 1).sample_n(n_params)
 # torchsize = torch.Size([param_vector])
-def addGausianNoise():
+def addGausianNoise(standardDeviation=[1.0]):
     # Gausian Laplace Noise
     param_vector = parameters_to_vector(net.parameters())
     n_params = len(param_vector)
-    noise = tdist.Normal(torch.tensor([0.0]), torch.tensor([1.0])).sample(sample_shape=torch.Size([n_params, ]))
+    noise = tdist.Normal(torch.tensor([0.0]), torch.tensor(standardDeviation)).sample(sample_shape=torch.Size([n_params, ]))
     print(noise)
     noiseExtracted = np.array([])
     for counter, value in enumerate(noise):
@@ -85,10 +85,12 @@ def addGausianNoise():
     param_vector.add_(noiseExtracted)
     vector_to_parameters(param_vector, net.parameters())
 
-addNoiseOrNot = input("Please enter 'Y' to add Gaussian noise to the weight");
+addNoiseOrNot = input("Please enter 'Y' to add Gaussian noise to the weight")
 
 if addNoiseOrNot.lower() == 'Y'.lower():
-    addGausianNoise()
+    setVariation = input("Please enter a float number to add Variabtion to the weight")
+    setVariation = float(setVariation)
+    addGausianNoise([setVariation])
     print("Gaussian noise has been added")
 else:
     print("No Gaussian noise has been added")
