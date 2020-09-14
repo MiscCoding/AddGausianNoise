@@ -84,65 +84,9 @@ def addGausianNoise(standardDeviation=[1.0]):
     param_vector.add_(noiseExtracted)
     vector_to_parameters(param_vector, net.parameters())
 
-
-def accuracy(model, testloader, device="cuda", max_total=-1):
-    correct = 0.0
-    total = 0.0
-
-    if max_total == -1:
-        max_total = 999999
-
-    with torch.no_grad():
-        for i, data in enumerate(testloader, 0):
-            x_ts, y_ts = data
-            # print(device)
-            x_ts = x_ts.to(device)
-            y_ts = y_ts.to(device)
-            output = model(x_ts)
-            _, predicted = torch.max(output.data, 1)
-
-            # _, predicted = torch.argmax(output.data, 1)
-            total += y_ts.size(0)
-            correct += (predicted == y_ts).sum().item()
-            if total > max_total:
-                break
-        return correct / total
-
-
 ## Accuray computation!!
-def AreDummyAndOriginalLabelNoMatch(gt_oneshot_label, dummy_onehot_label_copy, decimalRound=3):
-    originalLabelNo = int(torch.argmax(gt_oneshot_label[0]))
-    dummyLabelCopy = int(torch.argmax(dummy_onehot_label_copy[0]))
-
-    if(originalLabelNo == dummyLabelCopy):
-        print("Correct!  The label no. is " + str(originalLabelNo))
-
-
-
-    # print("Original Image is No." + str(pred) + ". The class : " + str(label))
-    # print("Original length is " + str(dy_dx_roundedLength) + ". dummy length is " + str(dummy_dy_dx_roundedLength))
-    #
-
-    # dy_dx_rounded = (dy_dx * 10 ** decimalRound).round() / (10**decimalRound)
-    # dummy_dy_dx_rounded = (dummy_dy_dx_copy * 10 ** decimalRound).round() / (10**decimalRound)
-    # dy_dx_roundedLength = len(dy_dx_rounded[0])
-    # dummy_dy_dx_roundedLength = len(dummy_dy_dx_rounded[0])
-    # #
-    # score = 0
-    # print("Original Image is No." + str(dy_dx_rounded[0]) + ". The class : " + str(dummy_dy_dx_rounded[0]))
-    # print("Original length is " + str(dy_dx_roundedLength) + ". dummy length is " + str(dummy_dy_dx_roundedLength))
-    #
-    # for original_Value, dummy_Value in zip(dy_dx_rounded, dummy_dy_dx_rounded):
-    #     if (original_Value == dummy_Value):
-    #         print("Original and dummy value " + original_Value + ". Dummy value is " + dummy_Value)
-    #         score += 1
-    #
-    # accuray
-    # print("Accuracy : " + score)
-
-
-    ##print("Original Image is No." + str(dy_dx[0]) + ". The class : " + str(dummy_dy_dx_copy[0]))
-
+def AccuracyOfTwoLabels(dy_dx, dummy_dy_dx_copy):
+    return 0
     # print("Original list length = " + str(len(original)) + ". Dummy list length = " +str(len(dummy)))
     # accuracyScore = 0
     # originalList = original[0]
@@ -175,10 +119,8 @@ def AreDummyAndOriginalLabelNoMatch(gt_oneshot_label, dummy_onehot_label_copy, d
 
 ##Image Label checker
 def ImageLabelPrintoftheOriginalAndDummyOutput(gt_label, dummy_label):
-    print("Original Image is No." + str(gt_label[0]) + ". Dummy image values : " + dst.classes[gt_label[0]])
-
-def showImageLabel(dummy_pred_copy):
-    print(dummy_pred_copy)
+    print("Original Image is No." + str(gt_label[0]) + ". The class : " + dst.classes[gt_label[0]])
+    print("Original Image is No." + str(gt_label[0]) + ". The class : " + dst.classes[gt_label[0]])
 
 
 
@@ -259,7 +201,6 @@ for i in range(30):
     plt.axis('off')
 
 
-# ImageLabelPrintoftheOriginalAndDummyOutput(pred, dummy_pred_copy)
-
-AreDummyAndOriginalLabelNoMatch(gt_onehot_label, dummy_onehot_label_copy)
+ImageLabelPrintoftheOriginalAndDummyOutput(gt_label, dummy_label)
+##AccuracyOfTwoLabels(dy_dx, dummy_dy_dx_copy)
 plt.show()
